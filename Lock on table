@@ -1,0 +1,36 @@
+=======================sessrion running except from sys and system====================
+set line 200
+set pagesize 100
+col username format a15
+col PROGRAM for a30
+col PROGRAM for a15
+select SID, SERIAL#, Program, USERNAME,osuser,STATUS, SQL_HASH_VALUE,machine,LOGON_TIME,last_call_et from v$session where username not in('SYS','SYSTEM');
+
+alter system kill session '772,4029' immediate ;
+
+================================lock on table================================================
+set line 2000
+col MACHINE format a20
+col MACHINE format a20
+col OBJECT_NAME format a30
+col OWNER format a20
+select
+   c.owner,
+   c.object_name,
+   c.object_type,
+   b.sid,
+   b.serial#,
+   b.status,
+   b.osuser,
+   b.machine,
+   b.LAST_CALL_ET
+from
+   v$locked_object a ,
+   v$session b,
+   dba_objects c
+where
+   b.sid = a.session_id
+and
+   a.object_id = c.object_id;
+   
+   
